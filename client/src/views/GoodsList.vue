@@ -9,7 +9,7 @@
             <div class="filter-nav">
                 <span class="sortby">Sort by:</span>
                 <a href="javascript:void(0)" class="default cur">Default</a>
-                <a href="javascript:void(0)" class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+                <a href="javascript:void(0)" class="price" @click='goodsSort'>Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
                 <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
             </div>
             <div class="accessory-result">
@@ -41,7 +41,7 @@
                             <!-- <li> -->
                                 <div class="pic">
                                     <!-- <a href="#"><img src="/static/img/1.jpg" alt=""></a> -->
-                                    <a :href="item.productUrl"><img :src="'/static/img/'+item.productImage" alt=""></a>
+                                    <a :href="item.productUrl"><img v-lazy="'/static/img/'+item.productImage" alt=""></a>
                                 </div>
                                 <div class="main">
                                     <!-- <div class="name">XX</div> -->
@@ -111,7 +111,8 @@ export default {
   },
   data () {
     return {
-        goods: {}
+        goods: {},
+        sortFlag: true
     }
   },
   created() {
@@ -120,11 +121,20 @@ export default {
   methods: {
       getGoods(){
         // axios.get('http://easy-mock.com/mock/59664d4d58618039284c7710/example/goods/list')
-        axios.get('/goods')
+        // axios.get('/goods')
+        // axios.get('http://localhost:3000/goods/list') //跨域了
+        let sort = this.sortFlag? 1: -1;
+
+        axios.get('/goods/list',{params:{sort:sort}})
         .then( res => {
             console.log(res)
-            this.goods = res.data.data;
+            this.goods = res.data.result;
         })
+      },
+      goodsSort(){
+          this.sortFlag = !this.sortFlag;
+          this.getGoods();
+          
       }
   }
 }
