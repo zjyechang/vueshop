@@ -4,7 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueLazyload from 'vue-lazyload'
-
+// 进度条懒加载
+import infiniteScroll from 'vue-infinite-scroll'
+Vue.use(infiniteScroll)
 // Vue.use(VueLazyload)
 
 // or with options

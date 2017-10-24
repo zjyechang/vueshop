@@ -17,19 +17,12 @@
                 <div class="filter stopPop" id="filter">
                     <dl class="filter-price">
                         <dt>Price:</dt>
-                        <dd><a href="javascript:void(0)">All</a></dd>
-                        <dd>
-                            <a href="javascript:void(0)">0 - 100</a>
+                        <dd><a href="javascript:void(0)" >All</a></dd>
+
+                        <dd v-for="(item,index) in priceFilter" :key="index">
+                            <a @click="classcur(index)" :class="{'cur': priceChecked==index}" href="javascript:void(0)">{{item.ltPrice}} - {{item.gtPrice}}</a>
                         </dd>
-                        <dd>
-                            <a href="javascript:void(0)">100 - 500</a>
-                        </dd>
-                        <dd>
-                            <a href="javascript:void(0)">500 - 1000</a>
-                        </dd>
-                        <dd>
-                            <a href="javascript:void(0)">1000 - 2000</a>
-                        </dd>
+
                     </dl>
                 </div>
 
@@ -49,11 +42,14 @@
                                     <!-- <div class="price">999</div> -->
                                     <div class="price">{{item.salePrice}}</div>
                                     <div class="btn-area">
-                                        <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                                        <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                                     </div>
                                 </div>
                             </li>
-                            
+
+                            <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+                            ...
+                            </div>
                         </ul>
                     </div>
                 </div>
@@ -112,29 +108,75 @@ export default {
   data () {
     return {
         goods: {},
-        sortFlag: true
+        sortFlag: true,
+        priceChecked:'all',
+        priceFilter: [
+            {ltPrice:0,gtPrice:100},
+            {ltPrice:100,gtPrice:500},
+            {ltPrice:500,gtPrice:1000},
+            {ltPrice:1000,gtPrice:2000},
+            // {ltPrice:2000},
+        ],
+        page:'1',
+        pageSize: '4',
+        busy: true,
     }
   },
   created() {
       this.getGoods();
   },
   methods: {
-      getGoods(){
+      getGoods(flag){
         // axios.get('http://easy-mock.com/mock/59664d4d58618039284c7710/example/goods/list')
         // axios.get('/goods')
         // axios.get('http://localhost:3000/goods/list') //跨域了
         let sort = this.sortFlag? 1: -1;
+        let param = {
+            sort,
+            priceRange: this.priceChecked,
+            page:this.page,
+            pageSize:this.pageSize,
+        }
 
-        axios.get('/goods/list',{params:{sort:sort}})
-        .then( res => {
-            console.log(res)
+        axios.get('/goods/list',{params:param}).then( res => {
+          if(flag){
+                // 多次加载
+							if(res.data.result.length == 0){
+									this.busy = true;
+							}else{
+									this.busy = false;
+							}
+						this.goods = this.goods.concat(res.data.result);  
+          }else{
+            // 第一次加载
             this.goods = res.data.result;
+            this.busy = false;
+					}
         })
       },
       goodsSort(){
           this.sortFlag = !this.sortFlag;
           this.getGoods();
           
+      },
+      classcur(index){
+          this.priceChecked = index;
+          this.getGoods();
+      },
+      loadMore: function(){
+				
+				setTimeout(() => {
+					this.page++;
+          this.getGoods(true);
+        }, 1000);
+      },
+      addCart(productId){
+          axios.post('/goods/addCart',{productId}).then( res => {
+              console.log(res.data);
+              if(res.data.status ==0){
+                  alert(res.data.result);   
+              }
+          })
       }
   }
 }
