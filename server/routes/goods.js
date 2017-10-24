@@ -26,23 +26,23 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/list',function(req, res, next){
-    // let sort = req.params('sort');
-    // // let {sort} = req.query.body;
-    // let goodsPriceSort = Goods.find({},sort({'salePrice':sort}));
-    // console.log(sort,goodsPriceSort)
-    // goodsPriceSort.exec({},function(err,doc){
-    //     if(err){
-    //         res.json({'status': '1', msg: err.message});
-    //     }else{
-    //         res.json({'status': '0', msg: "数据获取成功",result: doc});
-    //     }
-    // })
-    Goods.find({},function(err,doc){
+    let sort = req.params('sort');
+    // let {sort} = req.query.body;
+    let goodsPriceSort = Goods.find({},sort({'salePrice':sort}));
+    console.log(sort,goodsPriceSort)
+    goodsPriceSort.exec({},function(err,doc){
         if(err){
-            res.json({'status': '1', msg: err.message})
+            res.json({'status': '1', msg: err.message});
         }else{
-            res.json({'status': '0', msg: "数据获取成功",result: doc})
+            res.json({'status': '0', msg: "数据获取成功",result: doc});
         }
     })
+    // Goods.find({},function(err,doc){
+    //     if(err){
+    //         res.json({'status': '1', msg: err.message})
+    //     }else{
+    //         res.json({'status': '0', msg: "数据获取成功",result: doc})
+    //     }
+    // })
 })
 module.exports = router;
