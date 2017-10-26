@@ -17,10 +17,10 @@
                 <div class="filter stopPop" id="filter">
                     <dl class="filter-price">
                         <dt>Price:</dt>
-                        <dd><a href="javascript:void(0)" >All</a></dd>
+                        <dd><a href="javascript:void(0)" :class="{'cur': priceChecked== 'all'}" @click="setPrice('all')" >All</a></dd>
 
                         <dd v-for="(item,index) in priceFilter" :key="index">
-                            <a @click="classcur(index)" :class="{'cur': priceChecked==index}" href="javascript:void(0)">{{item.ltPrice}} - {{item.gtPrice}}</a>
+                            <a @click="setPrice(index)" :class="{'cur': priceChecked== index}" href="javascript:void(0)">{{item.ltPrice}} - {{item.gtPrice}}</a>
                         </dd>
 
                     </dl>
@@ -85,7 +85,21 @@
   </div>
 </footer> -->
 <Navfooter/>
+<!-- 在未登录的情况下 -->
+<modal :mdShow="mdShow">
+    <p slot="message">请先登录，否则无法加入购物车</p>
+    <div slot="btnGroup">
+        <a href="javascript:;" class="btn  btn--m" @click="mdShow=false">关闭</a>
+    </div>
+</modal>
 
+<modal :mdShow="mdShowCart">
+    <div slot='message'>加入购物车成功</div>
+    <div slot="btnGroup">
+        <a href="javascript:;" class="btn btn--m" @click="mdShowCart=false">继续购物</a>
+        <router-link class="btn btn--m" to="/cart">查看购物车列表</router-link>
+    </div>
+</modal>
 
   </div>
 </template>
@@ -94,6 +108,7 @@
 import NavHeader from '@/components/Header'
 import NavBread from '@/components/NavBread'
 import Navfooter from '@/components/Footer'
+import Modal from '@/components/Modal'
 import axios from 'axios'
 
 // import '../../static/css/base.css'
@@ -103,7 +118,8 @@ export default {
   components: {
     NavHeader,
     NavBread,
-    Navfooter
+    Navfooter,
+    Modal
   },
   data () {
     return {
@@ -120,6 +136,8 @@ export default {
         page:'1',
         pageSize: '4',
         busy: true,
+        mdShow: false,
+        mdShowCart: false,
     }
   },
   created() {
@@ -159,23 +177,29 @@ export default {
           this.getGoods();
           
       },
-      classcur(index){
+      setPrice(index){
           this.priceChecked = index;
+          this.page = 1;
           this.getGoods();
       },
       loadMore: function(){
 				
-				setTimeout(() => {
-					this.page++;
+        setTimeout(() => {
+          this.page++;
           this.getGoods(true);
         }, 1000);
       },
       addCart(productId){
           axios.post('/goods/addCart',{productId}).then( res => {
               console.log(res.data);
-              if(res.data.status ==0){
-                  alert(res.data.result);   
-              }
+            //   if(res.data.status ==0){
+            //       alert(res.data.result);   
+            //   }
+             if(res.data.status == 1){
+                        this.mdShow = true;
+                    }else{
+                        this.mdShowCart = true;
+                    }
           })
       }
   }

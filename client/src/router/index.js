@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import GoodsList from '@/views/GoodsList'
+import Cart from '@/views/Cart'
+import Address from '@/views/Address'
+
+// import Login from '@/views/Login'
+
 // @就是src
 Vue.use(Router)
 
@@ -10,6 +15,21 @@ export default new Router({
       path: '/',
       name: 'GoodsList',
       component: GoodsList
-    }
+    },
+    {
+      path: '/cart',
+      name: 'Cart',
+      component: Cart
+    },
+    {
+      path: '/address',
+      name: 'Address',
+      component: Address
+    },
+    // {
+    //   path: '/login',
+    //   name: 'Login',
+    //   component: Login
+    // }
   ]
 })
