@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+require('../util/util')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -25,12 +26,12 @@ router.post('/login', function(req, res, next){
       }else{
         res.cookie('userId', doc.userId,{
           path: '/',
-          maxAge: 3600000
+          maxAge: 36000000
         })
   
         res.cookie('userName',doc.userName, {
           path: '/',
-          maxAge: 3600000
+          maxAge: 36000000
         })
 
         res.json({
@@ -105,7 +106,7 @@ router.post('/cartUpdate', function(req, res, next){
       checked = req.body.checked,  
       productNum = req.body.productNum;
 
-  User.update({userId: userId,'cartList.productId': productId},{
+  User.update({userId,'cartList.productId': productId},{
    'cartList.$.productNum': productNum,
    "cartList.$.checked": checked
   },function(err, doc){
@@ -137,11 +138,11 @@ router.post('/checkAll',function(req, res, next) {
         result: ''
       })
     }else{
-      user.cartList.forEach( item =>{
+      doc.cartList.forEach( item =>{
         item.checked = checkAll;
       })
 
-      user.save(function(err, doc){
+      doc.save(function(err, doc){
         if (err) { res.json({ status: '1', msg: err.message, result: '' }) } else {
           res.json({ status: '0', msg: '', result: '操作成功' });
         }
@@ -167,13 +168,85 @@ router.post('/cartDel',function(req, res, next){
   })
 })
 
-router.post('addressList',function(req, res, next){
+router.get('/addressList',function(req, res, next){
   let userId = req.cookies.userId;
   User.findOne({userId},function(err, doc){
     if (err) {
       res.json({ status: 1, msg: err.message, result: '' })
     } else {
         res.json({ status: 0, msg: '', result: doc.addressList })
+    }
+  })
+})
+
+router.post('/setDefault', function(req, res, next){
+  let userId = req.cookies.userId;
+  let addressId = req.body.addressId;
+  if(!address){
+    res.json({ staus: 1, msg: 'address is null'});
+  }else{
+    User.findOne({userId}, function(err, doc){
+      if(err){
+        res.json({ staus: 1, msg: err.message, result: ''})      
+      }else{
+        res.json({ staus: 0, msg: '', result: doc.addressList})
+        var address =doc.addressList
+      }
+      address.forEach( item=>{
+        if(addressId = address.addressId){
+  
+        }
+      })
+    })
+
+  }
+})
+
+router.post('/payMent', function(req, res, next){
+  let userId = req.cookies.userId,
+      addressId = req.body.addressId,
+      orderTotal = req.body.orderTotal;
+
+  User.findOne({userId}, function(err, doc){
+    if(err){
+      res.json({ staus: 1, msg: err.message, result: ''})      
+    }else{
+      res.json({ staus: 0, msg: '', result: doc.addressList})
+    }
+    doc.cartList.filter( item =>{
+
+    })
+
+    var platform = '622';
+    var r1 = Math.random()*10 | 0;
+    var sysDate = new Date().Format('yyMMddhhmmss');
+    var createDate = new Date().Format('yy-MM-dd hh:mm:ss');
+    var order = {
+      orderId,
+      orderTotal,
+      addressInfo:address,
+      goodsList,
+      orderStatus: '10',
+      createDate
+    }
+
+    doc.orderList.push(order);
+    dov.save(function(err1, doc1){
+
+    })
+  })
+})
+
+router.get('/orderDetail', function(req, res, next){
+  let orderId = req.body.orderId,
+      userId = req.cookies.userId;
+  
+  User.find({userId}, function(err, userInfo){
+    if(err){
+      res.json({ staus: 1, msg: err.message, result: ''})      
+    }else{
+      var orderList = userInfo.
+      res.json({ staus: 0, msg: '', result: doc.addressList})
     }
   })
 })

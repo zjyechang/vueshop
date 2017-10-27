@@ -117,7 +117,8 @@
 							Item total: <span class="total-price">{{totalPrice}}</span>
 						</div>
 						<div class="btn-wrap">
-							<a class="btn btn--red">Checkout</a>
+							<!-- <router-link to="/address" class="btn btn--red">Checkout</router-link> -->
+							<a class="btn btn--red" @click="checkout">结账</a>
 						</div>
 					</div>
 				</div>
@@ -158,12 +159,14 @@
 			NavBread,
 			Modal
 		},
-
+		// watch: {
+		// 	cartList:this.cartList
+		// },
 		computed:{
 			// 购物车被选中的数量
 			checkoutCount(){
 				let i =0;
-				this.cartList.forEach( item =>{
+				this.cartList.forEach( (item) =>{
 					if(item.checked == '1') i++;
 				})
 				return i;
@@ -175,7 +178,7 @@
 			},
 			totalPrice(){
 				let money = 0;
-				this.cartList.forEach( item=>{
+				this.cartList.forEach( (item)=>{
 					if(item.checked == '1'){
 						money += item.salePrice * item.productNum;
 					}
@@ -193,7 +196,6 @@
 				this.$http.post('/users/cartList').then(result=>{
 					let res = result.data;
 					this.cartList = res.result;
-					console.log(res);
 				})
 			},
 			cartUpdate(type,item){
@@ -202,15 +204,15 @@
 					item.productNum --;
 				}else if(type == 'add'){
 					item.productNum ++;					
-				}else if(type == 'check'){
-					item.check = item.checked == 1? 0:1;
+				}else if(type == 'checked'){
+					item.checked = item.checked == 1? 0:1;
 				}
-				axios.post('/users/cartUpdate', {
+				this.$http.post('/users/cartUpdate', {
 						productId:item.productId,
 						productNum:item.productNum,
 						checked: item.checked
 				}).then( res =>{
-					console.log(res);
+					console.log(res); 
 				})
 			},
 			toggleCheckAll(){
@@ -236,12 +238,12 @@
 				})
 			},
 			checkout(){
-				if(this.checkedCount >0){
+				if(this.checkoutCount >0){
 					this.$router.push({
-							path: '/address'
+						path: '/address'
 					})
 				}else{
-						alert('您还没有选择商品')
+					alert('您还没有选择商品')
 				}
 			}
 		}

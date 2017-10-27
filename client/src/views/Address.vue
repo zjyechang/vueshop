@@ -58,11 +58,11 @@
       <div class="addr-list-wrap">
         <div class="addr-list">
           <ul>
-            <li>
+            <li v-for="(item,index) in addressList" :key="index" :class="{'check':item.isDefault}">
               <dl>
-                <dt>XXX</dt>
-                <dd class="address">朝阳公园</dd>
-                <dd class="tel">10000000000</dd>
+                <dt>{{item.userName}}</dt>
+                <dd class="address">{{item.streetName}}</dd>
+                <dd class="tel">{{item.tel}}</dd>
               </dl>
               <div class="addr-opration addr-del">
                 <a href="javascript:;" class="addr-del-btn">
@@ -70,7 +70,7 @@
                 </a>
               </div>
               <div class="addr-opration addr-set-default">
-                <a href="javascript:;" class="addr-set-default-btn"><i>Set default</i></a>
+                <a href="javascript:;" class="addr-set-default-btn" @click="setDefault(item.addressId)"><i>Set default</i></a>
               </div>
               <div class="addr-opration addr-default">Default address</div>
             </li>
@@ -150,7 +150,17 @@ export default {
   },
   methods:{
     getAddressList(){
-
+      this.$http.get('/users/addressList').then( res => {
+        this.addressList = res.data.result;
+      })
+    },
+    setDefault(addressId){
+      this.$http.post('/users/setDefault',{addressId}).then( res=>{
+        if(res.status == 0){
+          console.log(res);
+          this.getAddressList();
+        }
+      })
     }
   }
 }

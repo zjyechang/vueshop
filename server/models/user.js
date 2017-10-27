@@ -8,6 +8,7 @@ var userSchema = new Schema({
     "cartList": [{
         "productId": String,
         "productName": String,
+        "orderList": Array,
         "salePrice": Number,
         "productImage": String,
         "productNum": String,
