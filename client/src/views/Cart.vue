@@ -159,9 +159,7 @@
 			NavBread,
 			Modal
 		},
-		// watch: {
-		// 	cartList:this.cartList
-		// },
+
 		computed:{
 			// 购物车被选中的数量
 			checkoutCount(){
@@ -184,7 +182,8 @@
 					}
 				})
 				return money;
-			}
+			},
+			
 		},
 
 		created(){

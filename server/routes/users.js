@@ -130,7 +130,7 @@ router.post('/checkAll',function(req, res, next) {
   let userId = req.cookies.userId,
   checkAll = req.body.checkAll;
 
-  User.findOne({userId: userId},function(err, doc){
+  User.findOne({userId},function(err, doc){
     if(err){
       res.json({
         status: 1,
@@ -180,21 +180,38 @@ router.get('/addressList',function(req, res, next){
 })
 
 router.post('/setDefault', function(req, res, next){
-  let userId = req.cookies.userId;
-  let addressId = req.body.addressId;
-  if(!address){
-    res.json({ staus: 1, msg: 'address is null'});
+  let userId = req.cookies.userId,
+      addressId = req.body.addressId;
+
+  if(!addressId){
+    res.json({ staus: 1, msg: '不存在的地址'});
   }else{
     User.findOne({userId}, function(err, doc){
       if(err){
-        res.json({ staus: 1, msg: err.message, result: ''})      
-      }else{
-        res.json({ staus: 0, msg: '', result: doc.addressList})
-        var address =doc.addressList
+        return res.json({ staus: 1, msg: err.message, result: ''})      
       }
+      let address =doc.addressList;
       address.forEach( item=>{
-        if(addressId = address.addressId){
-  
+        if(addressId == item.addressId){
+          item.isDefault = true;
+        }else{
+          item.isDefault = false;
+        }
+      })
+
+      doc.save(function(err1, doc1){
+        if (err1) {
+          res.json({
+              status: '1',
+              msg: err.message,
+              result: ''
+          })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: doc1
+            })
         }
       })
     })
@@ -202,6 +219,23 @@ router.post('/setDefault', function(req, res, next){
   }
 })
 
+router.post('/delAddress',function(req, res, next){
+  let userId = req.cookies.userId,
+      addressId = req.body.addressId;
+      User.findOne({userId},function(err, doc){
+        let addList =  doc.addressList;
+        addList.forEach( (item,idx)=>{
+          if(item.addressId == addressId){
+            addList.splice(idx,1);
+          }
+        })
+        doc.save(function(err1, doc1){
+          if(err1){ res.json({status: '1', msg: "存储数据错误", result: ''})}else{
+            res.json({status: '0',msg: '删除成功', result: ''})
+          }
+        })
+      })
+})
 router.post('/payMent', function(req, res, next){
   let userId = req.cookies.userId,
       addressId = req.body.addressId,
@@ -211,42 +245,71 @@ router.post('/payMent', function(req, res, next){
     if(err){
       res.json({ staus: 1, msg: err.message, result: ''})      
     }else{
-      res.json({ staus: 0, msg: '', result: doc.addressList})
+      let address ='', goodsList = [];
+
+      // 获取地址
+      doc.addressList.forEach( item => {
+        if(item.addressId ==address){
+          address = item;
+        }
+      })
+      // 获取购买的商品
+      doc.cartList.filter( item =>{
+        if(item.checked == '1'){
+          goodsList.push(item)
+        }
+      })
+  
+      // 生成订单号
+      var platform = '622';
+      var r1 = Math.random()*10 | 0;
+      var r2 = Math.random()*10 | 0;
+      var sysDate = new Date().Format('yyMMddhhmmss');
+      var createDate = new Date().Format('yy-MM-dd hh:mm:ss');
+      var orderId = platform+r1+sysDate+r2;
+
+
+      var order = {
+        orderId,
+        orderTotal,
+        address,
+        goodsList,
+        orderStatus: '10',
+        createDate
+      }
+  
+      doc.orderList.push(order);
+      doc.save(function(err1, doc1){
+        if(err1){
+          res.json({ status:1 ,msg: err.message, result: ''})
+        }else{
+          res.json({status: 0 , msg: '', result: { orderId: order.orderId, orderTotal: orderTotal }})
+        }
+      })
     }
-    doc.cartList.filter( item =>{
-
-    })
-
-    var platform = '622';
-    var r1 = Math.random()*10 | 0;
-    var sysDate = new Date().Format('yyMMddhhmmss');
-    var createDate = new Date().Format('yy-MM-dd hh:mm:ss');
-    var order = {
-      orderId,
-      orderTotal,
-      addressInfo:address,
-      goodsList,
-      orderStatus: '10',
-      createDate
-    }
-
-    doc.orderList.push(order);
-    dov.save(function(err1, doc1){
-
-    })
   })
 })
 
 router.get('/orderDetail', function(req, res, next){
-  let orderId = req.body.orderId,
+  let orderId = req.query.orderId,
       userId = req.cookies.userId;
-  
-  User.find({userId}, function(err, userInfo){
+  User.findOne({userId}, function(err, doc){
     if(err){
       res.json({ staus: 1, msg: err.message, result: ''})      
     }else{
-      var orderList = userInfo.
-      res.json({ staus: 0, msg: '', result: doc.addressList})
+      let orderTotal = 0, 
+      orderList = doc.orderList;
+
+      if(orderList.length > 0){
+        orderList.forEach( item =>{
+          if(item.orderId == orderId){
+            orderTotal = item.orderTotal;
+            res.json({ status: 0, msg: '', result: { orderId: orderId, orderTotal: orderTotal } });
+          }
+        })
+      }else{
+      res.json({ staus: 10010, msg: "当前用户未创建订单", result: ''})            
+      }
     }
   })
 })

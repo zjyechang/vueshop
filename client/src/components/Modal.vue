@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="model">
       <div class="md-modal modal-msg md-modal-transition" :class="{'md-show':mdShow}">
 		<div class="md-modal-inner">
 		  <div class="md-top">
@@ -27,3 +27,13 @@ export default {
 
 }
 </script>
+
+<style>
+#model{
+	  text-align: center;
+}
+.confirm-tips>div{
+	margin-top:1em;
+	font-size: 2em;
+}
+</style>

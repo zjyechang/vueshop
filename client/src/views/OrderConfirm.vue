@@ -1,7 +1,7 @@
 <template>
 	<div>
 			<nav-header></nav-header>
-			<nav-bread>{{确认订单}}</nav-bread>
+			<nav-bread><span>确认订单</span></nav-bread>
 	<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<defs>
 			<symbol id="icon-add" viewBox="0 0 32 32">
@@ -59,7 +59,7 @@
 						<li v-for="(item,index) in cartList" :key="index" v-if="item.checked == '1'">
 							<div class="cart-tab-1">
 								<div class="cart-item-pic">
-									<img src="'/static/img/'+item.productImage" alt="">
+									<img :src="'/static/img/'+item.productImage" alt="">
 								</div>
 								<div class="cart-item-title">
 									<div class="item-name">{{item.productName}}</div>
@@ -117,10 +117,10 @@
 
 			<div class="order-foot-wrap">
 				<div class="prev-btn-wrap">
-					<button class="btn btn--m">Previous</button>
+					<button class="btn btn--m">上一步</button>
 				</div>
 				<div class="next-btn-wrap">
-					<button class="btn btn--m btn--red">Proceed to payment</button>
+					<button class="btn btn--m btn--red" @click="payMent">去支付</button>
 				</div>
 			</div>
 		</div>
@@ -134,47 +134,49 @@
 import NavHeader from '@/components/Header'
 import NavFooter from '@/components/Footer'
 import NavBread from '@/components/NavBread'
-import Modal from '@/components/Modal'
 
 export default {
 	data(){
-			return {
-					cartList: [],
-					subTotal: '',
-					shippong: 100,
-					discount: 100,
-					tax: 50,
-					orderTotal
-			}
-	}
+		return {
+			cartList: [],
+			subtotal: 0,
+			shipping: 100,
+			discount: 100,
+			tax: 50,
+			orderTotal: 0
+		}
+	},
 	components:{
 		NavHeader,
 		NavFooter,
 		NavBread,
-		Modal
 	},
 	created(){
-			this.init();
+		this.init();
 	},
 	methods: {
-			init(){
-				this.$http.post('/users/cartList').then( response =>{
-					let res = response.data;
-					this.cartList = res.result;
-					
-					this.cartList.forEach( item=> {
-						if(item.checked == '1'){
-							this.subTotal += 1*(item.salePrice);
-						}
-					})
-					this.orderTotal = 1*this.subTotal + 1*this.shippong + 1*this.tax - 1*this.discount;
-				})
-			},
-		payMnet(){
-			var addressId = this.$route.query.addressId;
-			this.$http.post('/users/payment',{addressId,subtotal}).then( res=>{
-				contents.log(res);
+		init(){
+			this.$http.post('/users/cartList').then( response =>{
+				let res = response.data;
+				this.cartList = res.result;
 				
+				this.cartList.forEach( item=> {
+					if(item.checked == '1'){
+						this.subtotal += 1*(item.salePrice);
+					}
+				})
+				this.orderTotal = 1*this.subtotal + 1*this.shipping + 1*this.tax - 1*this.discount;
+			})
+		},
+		payMent(){
+			var addressId = this.$route.query.addressId;
+			this.$http.post('/users/payMent',{addressId,orderTotal:this.orderTotal}).then( response=>{
+				let res = response.data;
+				if(res.status == '0'){
+					this.$router.push({
+						path: '/orderSuccess?orderId='+res.result.orderId
+					})
+				}
 			})
 		}
 	}

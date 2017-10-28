@@ -4,6 +4,7 @@ import GoodsList from '@/views/GoodsList'
 import Cart from '@/views/Cart'
 import Address from '@/views/Address'
 import OrderConfirm from '@/views/OrderConfirm'
+import OrderSuccess from '@/views/OrderSuccess'
 
 // import Login from '@/views/Login'
 
@@ -28,9 +29,14 @@ export default new Router({
       component: Address
     },
     {
-      path: '/order',
+      path: '/orderConfirm',
       name: 'OrderConfirm',
       component: OrderConfirm
+    },
+    {
+      path: '/orderSuccess',
+      name: 'OrderSuccess',
+      component: OrderSuccess
     },
     // {
     //   path: '/login',
