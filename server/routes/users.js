@@ -218,7 +218,10 @@ router.post('/setDefault', function(req, res, next){
 
   }
 })
-
+router.post('/addAddress',function(req, res, next){
+  let userId = req.cookies.userId,
+      
+})
 router.post('/delAddress',function(req, res, next){
   let userId = req.cookies.userId,
       addressId = req.body.addressId;
