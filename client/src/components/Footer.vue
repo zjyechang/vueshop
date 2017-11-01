@@ -65,7 +65,7 @@
 
 
                 <dl class="col-links">
-                    <dt>vnshop</dt>
+                    <dt>服务相关</dt>
                     <dd>
                         <a href="article.php?id=12" target="_blank" title="预约亲临到店服务" rel="nofollow">预约亲临到店服务</a>
                     </dd>
@@ -73,37 +73,37 @@
                         <a href="article.php?id=13" target="_blank" title="服务网点" rel="nofollow">服务网点</a>
                     </dd>
                     <dd>
-                        <a href="article.php?id=14" target="_blank" title="vnshop" rel="nofollow">vnshop</a>
+                        <a href="article.php?id=14" target="_blank" title="会员卡办理" rel="nofollow">会员卡办理</a>
                     </dd>
 
                 </dl>
 
 
                 <dl class="col-links">
-                    <dt>vnshop</dt>
+                    <dt>会员中心</dt>
                     <dd>
-                        <a href="article.php?id=24" target="_blank" title="vnshop" rel="nofollow">vnshop</a>
+                        <a href="article.php?id=24" target="_blank" title="vnshop" rel="nofollow">会员福利</a>
                     </dd>
                     <dd>
-                        <a href="article.php?id=25" target="_blank" title="vnshop" rel="nofollow">vnshop</a>
+                        <a href="article.php?id=25" target="_blank" title="vnshop" rel="nofollow">会员说明</a>
                     </dd>
                     <dd>
-                        <a href="article.php?id=26" target="_blank" title="vnshop" rel="nofollow">vnshop</a>
+                        <a href="article.php?id=26" target="_blank" title="vnshop" rel="nofollow">会员办理</a>
                     </dd>
 
                 </dl>
 
 
                 <dl class="col-links">
-                    <dt>vnshop</dt>
+                    <dt>建议与意见</dt>
                     <dd>
-                        <a href="article.php?id=15" target="_blank" title="官方微信" rel="nofollow">官方微信</a>
+                        <a href="article.php?id=15" target="_blank" title="官方微信" rel="nofollow">关于我们</a>
                     </dd>
                     <dd>
-                        <a href="article.php?id=16" target="_blank" title="vnshop" rel="nofollow">vnshop</a>
+                        <a href="article.php?id=16" target="_blank" title="vnshop" rel="nofollow">联系我们</a>
                     </dd>
                     <dd>
-                        <a href="article.php?id=17" target="_blank" title="新浪微博" rel="nofollow">新浪微博</a>
+                        <a href="article.php?id=17" target="_blank" title="新浪微博" rel="nofollow">客户反馈</a>
                     </dd>
 
                 </dl>
@@ -125,7 +125,7 @@
                 <p class="sites">
                 </p>
                 <p>
-                    ©<a href='#'>mi.shudong.wang</a> 京ICP证110507号 京ICP备10046444号 京公网安备1101080212535号 <a href='#'>京网文[2014]0059-0009号</a>
+                    ©<a href='http://www.zjyechang.top'>zjyechang.top</a> 浙ICP备17043478号-1 <a href='#'></a>
                 </p>
             </div>
             <div class="info-links">
